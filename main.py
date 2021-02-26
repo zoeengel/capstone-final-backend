@@ -16,7 +16,7 @@ def init_sql_db():
     print("Opened database successfully")
 
     conn.execute('CREATE TABLE IF NOT EXISTS blog_info (id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT, '
-                 'Content TEXT, Author, TEXT, Date Text)')
+                 'Content TEXT, Author TEXT, Date TEXT, image TEXT)')
     print("Table created successfully ")
     conn.close()
 
@@ -37,11 +37,13 @@ def add_new_post():
             title = request.form['title']
             content = request.form['content']
             author = request.form['author']
+            image = request.form['image']
 
             with sqlite3.connect('blogs.db') as connection:
                 cursor = connection.cursor()
-                cursor.execute("INSERT INTO blog_info (Title, Content, Author, Date) VALUES (?, ?, ?, ?)",
-                               (title, content, author, datetime.datetime.now()))
+                cursor.execute("DELETE FROM blog_info WHERE image LIKE '%null%'")
+                cursor.execute("INSERT INTO blog_info (Title, Content, Author, Date, image) VALUES (?, ?, ?, ?, ?)",
+                               (title, content, author, datetime.datetime.now(), image))
                 connection.commit()
                 msg = "Post added.."
         except Exception as e:
@@ -49,7 +51,6 @@ def add_new_post():
         finally:
             connection.close()
             return msg
-
 
 @app.route('/get-all-posts/', methods=['GET'])
 def get_all_posts():
