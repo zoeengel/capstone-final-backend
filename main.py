@@ -25,9 +25,11 @@ init_sql_db()
 app = Flask(__name__)
 CORS(app)
 
+
 @app.route('/')
 def load_post_form():
     return render_template('add-blog.html')
+
 
 @app.route('/add-new/', methods=['POST'])
 def add_new_post():
@@ -41,7 +43,6 @@ def add_new_post():
 
             with sqlite3.connect('blogs.db') as connection:
                 cursor = connection.cursor()
-                cursor.execute("DELETE FROM blog_info WHERE image LIKE '%null%'")
                 cursor.execute("INSERT INTO blog_info (Title, Content, Author, Date, image) VALUES (?, ?, ?, ?, ?)",
                                (title, content, author, datetime.datetime.now(), image))
                 connection.commit()
@@ -51,6 +52,7 @@ def add_new_post():
         finally:
             connection.close()
             return msg
+
 
 @app.route('/get-all-posts/', methods=['GET'])
 def get_all_posts():
