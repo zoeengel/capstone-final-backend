@@ -69,3 +69,20 @@ def get_all_posts():
         finally:
             connection.close()
             return jsonify(data)
+
+
+@app.route('/get-single-post/<int:data_id>/', methods=['GET'])
+def show_single_post(data_id):
+    data = []
+    try:
+        with sqlite3.connect('blogs.db') as con:
+            con.row_factory = dic_fac
+            cur = con.cursor()
+            cur.execute('SELECT * FROM blog_info WHERE id=' + str(data_id))
+            data = cur.fetchone()
+    except Exception as e:
+        con.rollback()
+        print("Error fetching data from the database" + str(e))
+    finally:
+        con.close()
+        return jsonify(data)
