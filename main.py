@@ -30,6 +30,8 @@ CORS(app)
 def load_post_form():
     return render_template('add-blog.html')
 
+# TO ADD A NEW POST USE THE "/add-new/" or "/" EXTENSION
+# IN ORDER TO ADD AN IMAGE GO TO "https://postimages.org/" AND COPY THE DIRECT IMG LINK
 
 @app.route('/add-new/', methods=['POST'])
 def add_new_post():
